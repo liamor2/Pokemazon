@@ -1,32 +1,35 @@
 <template>
-<ul>
-    <li v-for="pokemon in pokemons" :key="pokemon.name">
-        {{ pokemon.name }}
-    </li>
-</ul>
-<div>
-    <button v-if="page > 1" @click="handleClick">Previous</button>
-    <button v-if="page < 5000" @click="handleClick">Next</button>
-</div>
+    <ul>
+        <li v-for="pokemon in pokemons" :key="pokemon.name">
+            <img :src="pokemon.sprites.front_default" alt="pokemon" />
+            <p>{{ pokemon.name }}</p>
+        </li>
+    </ul>
+    <div>
+        <button v-if="pokemonStore.page > 1" @click="handleClick">Previous</button>
+        <button v-if="pokemonStore.page < 5000" @click="handleClick">Next</button>
+    </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { usePokemonStore } from '../stores/pokemon-store.js'
 const props = defineProps({
     pokemons: Array,
-    page: Number
+    pokemonStore: Object
 })
+
+const pokemonStore = usePokemonStore()
 
 const emit = defineEmits(['update:page'])
 
-let page = ref(props.page)
-
-function handleClick() {
+async function handleClick() {
     if (event.target.textContent === 'Previous') {
-        emit('update:page', --page.value)
+        await pokemonStore.prevPage()
     } else {
-        emit('update:page', ++page.value)
+        await pokemonStore.nextPage()
     }
+    emit('update:page', pokemonStore.page)
 }
 </script>
 
