@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li v-for="pokemon in pokemons" :key="pokemon.name">
-            <button>
+            <button @click="handlePokemon">
                 <pokemon-list-element :pokemon="pokemon" />
             </button>
         </li>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { usePokemonStore } from '../stores/pokemon-store.js'
 import  pokemonListElement  from './pokemonListElement.vue'
 import gsap from 'gsap';
@@ -48,9 +48,10 @@ async function handleClick() {
     emit('update:page', pokemonStore.page)
 }
 
-onMounted(async () => {
-    await pokemonStore.fetchPokemons()
-})
+async function handlePokemon() {
+    let pokemon = event.target.closest('li').querySelector('p').textContent
+    window.location.href = `#/pokemon/${pokemon}`
+}
 </script>
 
 <style lang="scss" scoped>
@@ -77,6 +78,7 @@ button {
 
 ul {
     list-style: none;
+    // display: none;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -84,8 +86,8 @@ ul {
 }
 
 li {
-    margin: 1rem 0;
-    width: 20%;
+    margin: 1%;
+    width: 18%;
     display: flex;
     flex-direction: wrap;
     gap: 1rem;
@@ -93,6 +95,7 @@ li {
     transition: transform 0.3s;
 
     button{
+        position: relative;
         width: 100%;
         height: 100%;
         border: none;
@@ -121,26 +124,6 @@ li {
     &:hover {
         transform: scale(1.05);
     }
-}
-
-button {
-    padding: 0.5rem 1rem;
-    margin: 1rem 0.5rem;
-    border: none;
-    border-radius: 5px;
-    background-color: #e0e0e0;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #000;
-    text-transform: uppercase;
-    outline: none;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
@@ -181,6 +164,7 @@ div {
 
 div input {
     width: 3rem;
+    height: 2rem;
     text-align: center;
     margin: 0 0.5rem;
     border: none;

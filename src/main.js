@@ -5,6 +5,7 @@ import App from './App.vue'
 import './style.css'
 
 import PokemonListPage from './pages/PokemonListPage.vue'
+import PokemonDetailsPage from './pages/PokemonDetailsPage.vue'
 
 
 const routes = [
@@ -13,6 +14,15 @@ const routes = [
         name: 'PokemonList',
         component: PokemonListPage
     },
+    {
+        path: '/pokemon/:name',
+        name: 'PokemonDetails',
+        component: PokemonDetailsPage,
+    },
+    {
+        path: '/:catchAll(.*)',
+        redirect: '/'
+    }
 ]
 
 const router = createRouter({
