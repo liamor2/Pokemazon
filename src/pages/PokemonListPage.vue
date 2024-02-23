@@ -29,6 +29,7 @@ function handlePageChange(newPage) {
 async function handleClick() {
     let search = document.querySelector('input').value.toLowerCase()
     await pokemonStore.fetchPokemons()
+    pokemonStore.goToPage(1)
     let searchResult = pokemonStore.state.pokemons.filter(pokemon => pokemon.name.includes(search))
     pokemonStore.createPokemonSearchPage(searchResult)
     pokemonPage.value = pokemonStore.pokemonPage

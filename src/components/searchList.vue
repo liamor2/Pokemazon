@@ -11,6 +11,11 @@
             <i class="fa-solid fa-arrow-left"></i>
             <p>Previous</p>
         </button>
+        <div>
+            <input type="number" v-model="pokemonStore.page" min="1" max="pokemonStore.pageTotal" />
+            <p>of {{ pokemonStore.pageTotal }}</p>
+
+        </div>
         <button @click="handleClick" :disabled="pokemonStore.page >= pokemonStore.pageTotal">
             <p>Next</p>
             <i class="fa-solid fa-arrow-right"></i>
@@ -108,7 +113,7 @@ li {
             background-color: #f0f0f0;
         }
 
-        &:hover::v-deep p {
+        &:hover::deep p {
             color: #000;
         }
     }
@@ -163,5 +168,29 @@ button:disabled:active {
 div {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+    text-align: center;
+    outline: none;
+}
+
+div input {
+    width: 3rem;
+    text-align: center;
+    margin: 0 0.5rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+    outline: none;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
 }
 </style>
