@@ -1,33 +1,36 @@
 <template>
-    <ul>
-        <li v-for="pokemon in pokemons" :key="pokemon.name">
-            <button @click="handlePokemon">
-                <pokemon-list-element :pokemon="pokemon" />
+    <div v-if="pokemonStore.state.loading">
+        <loading />
+    </div>
+    <div v-else>
+        <ul>
+            <li v-for="pokemon in pokemons" :key="pokemon.name">
+                <button @click="handlePokemon">
+                    <pokemon-list-element :pokemon="pokemon" />
+                </button>
+            </li>
+        </ul>
+        <div id="pagination">
+            <button @click="handleClick" :disabled="pokemonStore.page <= 1">
+                <i class="fa-solid fa-arrow-left"></i>
+                <p>Previous</p>
             </button>
-        </li>
-    </ul>
-    <div>
-        <button @click="handleClick" :disabled="pokemonStore.page <= 1">
-            <i class="fa-solid fa-arrow-left"></i>
-            <p>Previous</p>
-        </button>
-        <div>
-            <input type="number" v-model="pokemonStore.page" min="1" max="pokemonStore.pageTotal" />
-            <p>of {{ pokemonStore.pageTotal }}</p>
-
+            <div>
+                <input type="number" v-model="pokemonStore.page" min="1" max="pokemonStore.pageTotal" />
+                <p>of {{ pokemonStore.pageTotal }}</p>
+            </div>
+            <button @click="handleClick" :disabled="pokemonStore.page >= pokemonStore.pageTotal">
+                <p>Next</p>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
         </div>
-        <button @click="handleClick" :disabled="pokemonStore.page >= pokemonStore.pageTotal">
-            <p>Next</p>
-            <i class="fa-solid fa-arrow-right"></i>
-        </button>
     </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
 import { usePokemonStore } from '../stores/pokemon-store.js'
 import  pokemonListElement  from './pokemonListElement.vue'
-import gsap from 'gsap';
+import loading from './loading.vue';
 
 
 const props = defineProps({
@@ -78,7 +81,6 @@ button {
 
 ul {
     list-style: none;
-    // display: none;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -87,7 +89,7 @@ ul {
 
 li {
     margin: 1%;
-    width: 18%;
+    width: 23%;
     display: flex;
     flex-direction: wrap;
     gap: 1rem;
@@ -148,7 +150,7 @@ button:disabled:active {
     background-color: #f0f0f0;
 }
 
-div {
+div#pagination {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -162,7 +164,19 @@ div {
     outline: none;
 }
 
-div input {
+div#pagination div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+    text-align: center;
+    outline: none;
+}
+
+div#pagination input {
     width: 3rem;
     height: 2rem;
     text-align: center;

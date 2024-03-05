@@ -30,9 +30,8 @@ export const usePokemonStore = defineStore('pokemon', () => {
                 console.log('Fetching pokemons');
                 const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0');
                 const json = await response.json();
-                state.pokemons = json.results;
-                state.currentPokemons = state.pokemons.map(pokemon => pokemon.name)
-                await createPokemonPage()
+                state.pokemons = json.results.map(pokemon => ({ ...pokemon, fetch: false }));
+                state.currentPokemons = state.pokemons.map(pokemon => pokemon.name);
                 isDataFetched = true;
             } catch (error) {
                 console.error(error);
@@ -44,12 +43,22 @@ export const usePokemonStore = defineStore('pokemon', () => {
     const fetchPokemon = async (name) => {
         state.loading = true;
         let pokemonData;
-        console.log(name);
+        // console.log(name);
         const fetchedPokemon = state.pokemons.find(pokemon => pokemon.name === name);
+        // console.log(state.pokemons);
         if (!fetchedPokemon.fetch || !fetchedPokemon) {
             const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
             pokemonData = await response.json();
             pokemonData.fetch = true;
+            pokemonData.price = calculatePokemonPrice(pokemonData);
+            if (pokemonData.forms.length > 1) {
+                for (let i = 1; i < pokemonData.forms.length; i++) {
+                    const response = await fetch(pokemonData.forms[i].url);
+                    const form = await response.json();
+                    pokemonData.forms[i] = form;
+                }
+                pokemonData.forms.shift();
+            }
             state.pokemons.splice(state.pokemons.findIndex(pokemon => pokemon.name === name), 1, pokemonData);
         } else {
             pokemonData = fetchedPokemon;
@@ -58,7 +67,30 @@ export const usePokemonStore = defineStore('pokemon', () => {
         return pokemonData;
     };
 
+    const calculatePokemonPrice = (pokemon) => {
+        var price = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0);
+        let sum = 0;
+        for (let i = 0; i < pokemon.name.length; i++) {
+            sum += pokemon.name.charCodeAt(i);
+        }
+        price += sum % 100;
+        price += pokemon.abilities.length * Math.pow(2, pokemon.abilities.length);
+        for (let i = 0; i < pokemon.moves.length; i++) {
+            price ++;
+        }
+        if (pokemon.forms.length > 1) {
+            price *= pokemon.forms.length;
+        }
+        if (pokemon.types.length === 2) {
+            price *= 1.5;
+        }
+        price += 9 - (price % 10);
+        price += 0.99;
+        return price;
+    }
+
     const createPokemonPage = async () => {
+        state.loading = true;
         pokemonPage.value = []
         if (state.currentPokemons.length === 0) {
             return;
@@ -80,6 +112,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
         }
         pokemonPage.value.sort((a, b) => a.order - b.order)
         // console.log(pokemonPage.value)
+        state.loading = false;
     }
 
     const createPokemonSearchPage = async (searchResult) => {

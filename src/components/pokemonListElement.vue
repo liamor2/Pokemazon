@@ -15,7 +15,7 @@ const props = defineProps({
 })
 
 onMounted(() => {
-    gsap.fromTo('.pokemon-container img#pokemon', { opacity: 0 }, { opacity: 1, duration: 1 })
+    gsap.fromTo('.pokemon-container img#pokemon', { opacity: 0 }, { opacity: 1, duration: 0.2 })
 })
 
 const handleMouseOver = (event) => {

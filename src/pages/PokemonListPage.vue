@@ -26,6 +26,7 @@ const pokemonPage = ref([])
 
 onMounted(async () => {
     await pokemonStore.fetchPokemons()
+    await pokemonStore.createPokemonPage()
     pokemonPage.value = pokemonStore.pokemonPage
 })
 

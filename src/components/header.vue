@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h1>{{ title }}</h1>
+    <h1>Pokemon</h1>
     <nav>
       <ul>
         <li><a href="#">Home</a></li>
@@ -14,11 +14,6 @@
 <script>
 export default {
   name: 'Header',
-  data() {
-    return {
-      title: 'My App'
-    }
-  }
 }
 </script>
 
