@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { usePokemonStore } from '../stores/pokemon-store.js'
+import { usePokemonStore } from '../script/pokemon-store.js'
 import  pokemonListElement  from './pokemonListElement.vue'
 import loading from './loading.vue';
 
@@ -118,7 +118,7 @@ li {
             background-color: #f0f0f0;
         }
 
-        &:hover::deep p {
+        &:hover:deep p {
             color: #000;
         }
     }

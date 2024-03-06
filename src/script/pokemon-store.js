@@ -43,9 +43,9 @@ export const usePokemonStore = defineStore('pokemon', () => {
     const fetchPokemon = async (name) => {
         state.loading = true;
         let pokemonData;
-        // console.log(name);
+        console.log(name);
         const fetchedPokemon = state.pokemons.find(pokemon => pokemon.name === name);
-        // console.log(state.pokemons);
+        console.log(state.pokemons);
         if (!fetchedPokemon.fetch || !fetchedPokemon) {
             const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
             pokemonData = await response.json();

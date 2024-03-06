@@ -3,7 +3,7 @@
         <img id="pokeball" src="../assets/pokeball.png" alt="pokeball"/>
         <img id="pokemon" :src="pokemon.sprites.front_default" alt="pokemon"/>
     </div>
-    <p class="pokemon-name">{{ pokemon.name }}</p>
+    <p>{{ pokemon.name }}</p>
 </template>
 
 <script setup>
@@ -34,7 +34,7 @@ const handleMouseOut = (event) => {
 
 <style lang="scss" scoped>
 
-.pokemon-container {
+div {
     position: relative;
     width: 100%;
     height: 100%;
@@ -43,23 +43,22 @@ const handleMouseOut = (event) => {
     align-items: flex-start;
     justify-content: center;
     margin-right: 5rem;
+
+    img#pokeball {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+    }
+    img#pokemon {
+        position: relative;
+        width: 75px;
+        height: 75px;
+        z-index: 1;
+        padding: 10px 10px 10px 15px;
+    }
 }
 
-img#pokeball {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-}
-
-img#pokemon {
-    position: relative;
-    width: 75px;
-    height: 75px;
-    z-index: 1;
-    padding: 10px 10px 10px 15px;
-}
-
-p.pokemon-name {
+p {
     width: 95%;
     position: absolute;
     text-transform: capitalize;

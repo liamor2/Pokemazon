@@ -88,7 +88,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { usePokemonStore } from '../stores/pokemon-store.js'
+import { usePokemonStore } from '../script/pokemon-store.js'
 import gsap from 'gsap'
 
 import HeaderComponent from '../components/header.vue'
@@ -344,4 +344,4 @@ article {
         }
     }
 }
-</style>
+</style>../script/pokemon-store.js

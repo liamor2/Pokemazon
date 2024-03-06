@@ -2,9 +2,12 @@
     <header-component />
     <div class="home">
         <h1>Pokedex</h1>
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="Search" list="pokemons" />
         <button @click="handleSearch">Search</button>
         <button @click="handleReset">Reset</button>
+        <datalist id="pokemons">
+            <option v-for="pokemon in pokemonStore.state.pokemons" :key="pokemon.name" :value="pokemon.name" />
+        </datalist>
     </div>
     <list-component :pokemons="pokemonPage" @update:page="handlePageChange" />
     <footer-component />
@@ -18,7 +21,7 @@ import footerComponent from '../components/footer.vue'
 
 
 
-import { usePokemonStore } from '../stores/pokemon-store.js'
+import { usePokemonStore } from '../script/pokemon-store.js'
 
 const pokemonStore = usePokemonStore()
 const page = ref(1)
@@ -37,19 +40,23 @@ function handlePageChange(newPage) {
 
 async function handleSearch() {
     let search = document.querySelector('input').value.toLowerCase()
-    await pokemonStore.fetchPokemons()
-    pokemonStore.goToPage(1)
     let searchResult = pokemonStore.state.pokemons.filter(pokemon => pokemon.name.includes(search))
-    pokemonStore.createPokemonSearchPage(searchResult)
-    pokemonPage.value = pokemonStore.pokemonPage
+    if (searchResult.length === 1 && searchResult[0].name.toLowerCase() === search) {
+        window.location.href = `#/pokemon/${search}`
+    } else {
+        pokemonStore.goToPage(1)
+        pokemonStore.createPokemonSearchPage(searchResult)
+        pokemonPage.value = pokemonStore.pokemonPage
+    }
 }
 
 async function handleReset() {
     await pokemonStore.reset()
     pokemonPage.value = pokemonStore.pokemonPage
+    document.querySelector('input').value = ''
 }
 </script>
 
 <style lang="scss" scoped>
 
-</style>
+</style>../script/pokemon-store.js
