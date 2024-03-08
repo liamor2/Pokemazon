@@ -4,7 +4,7 @@ import { ref, reactive, watch, onMounted, computed } from 'vue'
 export const usePokemonStore = defineStore('pokemon', () => {
     onMounted(async () => {
         try {
-            console.log('Mounted')
+            console.log('Pokemon Store Mounted')
         } catch (error) {
             console.error(error)
         }
@@ -18,17 +18,17 @@ export const usePokemonStore = defineStore('pokemon', () => {
         error: null,
     });
     const page = ref(1)
-    const pageNumber = ref(20)
+    const pokemonPerPage = ref(20)
     const pokemonPage = ref([])
 
     let isDataFetched = false;
 
-    const fetchPokemons = async () => {
+    const fetchAllPokemons = async () => {
         if (!isDataFetched) {
             state.loading = true;
             try {
                 console.log('Fetching pokemons');
-                const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0');
+                const response = await fetch('https://pokeapi.co/api/v2/pokemon-species?limit=100000&offset=0');
                 const json = await response.json();
                 state.pokemons = json.results.map(pokemon => ({ ...pokemon, fetch: false }));
                 state.currentPokemons = state.pokemons.map(pokemon => pokemon.name);
@@ -40,12 +40,14 @@ export const usePokemonStore = defineStore('pokemon', () => {
         }
     };
 
-    const fetchPokemon = async (name) => {
+    const fetchOnePokemon = async (name) => {
         state.loading = true;
         let pokemonData;
-        console.log(name);
+        if (name === undefined) {
+            state.loading = false;
+            return false;
+        }
         const fetchedPokemon = state.pokemons.find(pokemon => pokemon.name === name);
-        console.log(state.pokemons);
         if (!fetchedPokemon.fetch || !fetchedPokemon) {
             const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
             pokemonData = await response.json();
@@ -84,6 +86,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
         if (pokemon.types.length === 2) {
             price *= 1.5;
         }
+        price *= 5;
         price += 9 - (price % 10);
         price += 0.99;
         return price;
@@ -94,24 +97,24 @@ export const usePokemonStore = defineStore('pokemon', () => {
         pokemonPage.value = []
         if (state.currentPokemons.length === 0) {
             return;
-        } else if (state.currentPokemons.length < pageNumber.value) {
+        } else if (state.currentPokemons.length < pokemonPerPage.value) {
             for (let i = 0; i < state.currentPokemons.length; i++) {
                 const pokemonName = state.currentPokemons[i];
-                let pokemon = await fetchPokemon(pokemonName);
+                let pokemon = await fetchOnePokemon(pokemonName);
                 pokemonPage.value.push(pokemon);
             }
-            // console.log(pokemonPage.value)
             return;
         } else {
-            for (let i = 0; i < pageNumber.value; i++) {
-                const pokemonName = state.currentPokemons[(page.value - 1) * pageNumber.value + i];
-                let pokemon = await fetchPokemon(pokemonName);
-                pokemonPage.value.push(pokemon);
+            for (let i = 0; i < pokemonPerPage.value; i++) {
+                const pokemonName = state.currentPokemons[(page.value - 1) * pokemonPerPage.value + i];
+                let pokemon = await fetchOnePokemon(pokemonName);
+                if (pokemon) {
+                    pokemonPage.value.push(pokemon);
+                }
             }
 
         }
         pokemonPage.value.sort((a, b) => a.order - b.order)
-        // console.log(pokemonPage.value)
         state.loading = false;
     }
 
@@ -127,6 +130,13 @@ export const usePokemonStore = defineStore('pokemon', () => {
         await createPokemonPage()        
     }
 
+    const generateDailyPokemon = async (seed) => {
+        await fetchAllPokemons()
+        const pokemonIndex = seed % state.pokemons.length;
+        const pokemon = state.pokemons[pokemonIndex];
+        return pokemon.name;
+    };
+
     const reset = async () => {
         state.currentPokemons = []
         state.currentPokemons = state.pokemons.map(pokemon => pokemon.name)
@@ -139,12 +149,18 @@ export const usePokemonStore = defineStore('pokemon', () => {
         await createPokemonPage()
     }
 
+    const changePokemonPerPage = (value) => {
+        pokemonPerPage.value = value
+        page.value = 1
+        createPokemonPage()
+    }
+
     watch(page, async () => {
         await createPokemonPage()
     })
 
     const pageTotal = computed(() => {
-        return Math.ceil(state.currentPokemons.length / pageNumber.value)
+        return Math.ceil(state.currentPokemons.length / pokemonPerPage.value)
     })
 
     const nextPage = () => {
@@ -165,13 +181,15 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
     return {
         state,
-        fetchPokemons,
-        fetchPokemon,
+        fetchAllPokemons,
+        fetchOnePokemon,
         createPokemonPage,
         createPokemonSearchPage,
+        generateDailyPokemon,
         reset,
+        changePokemonPerPage,
         page,
-        pageNumber,
+        pokemonPerPage,
         pokemonPage,
         pageTotal,
         nextPage,

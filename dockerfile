@@ -5,4 +5,6 @@ RUN npm install
 COPY . .
 RUN npm run build
 EXPOSE 8080
-CMD [ "npm", "run", "serve" ]
+COPY start.sh .
+RUN chmod +x start.sh
+CMD ["./start.sh"]

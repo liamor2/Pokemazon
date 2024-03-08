@@ -16,8 +16,17 @@
                 <p>Previous</p>
             </button>
             <div>
-                <input type="number" v-model="pokemonStore.page" min="1" max="pokemonStore.pageTotal" />
-                <p>of {{ pokemonStore.pageTotal }}</p>
+                <div>
+                    <input type="number" v-model="page" min="1" max="pokemonStore.</button>pageTotal" @keyup.enter="handleGoToPage" />
+                    <p>/ {{ pokemonStore.pageTotal }}</p>
+                </div>
+                <select v-model="pokemonStore.pokemonPerPage" title="Pokemons per page" @change="handleChangePokemonNumber">
+                    <option disabled value="">Pokemons per page</option>
+                    <option value="12">12</option>
+                    <option value="20" selected>20</option>
+                    <option value="40">40</option>
+                    <option value="60">60</option>
+                </select>
             </div>
             <button @click="handleClick" :disabled="pokemonStore.page >= pokemonStore.pageTotal">
                 <p>Next</p>
@@ -29,6 +38,7 @@
 
 <script setup>
 import { usePokemonStore } from '../script/pokemon-store.js'
+import { ref } from 'vue'
 import  pokemonListElement  from './pokemonListElement.vue'
 import loading from './loading.vue';
 
@@ -39,6 +49,7 @@ const props = defineProps({
 })
 
 const pokemonStore = usePokemonStore()
+const page = ref(pokemonStore.page)
 
 const emit = defineEmits(['update:page'])
 
@@ -48,12 +59,28 @@ async function handleClick() {
     } else {
         await pokemonStore.nextPage()
     }
+    page.value = pokemonStore.page
     emit('update:page', pokemonStore.page)
 }
 
 async function handlePokemon() {
-    let pokemon = event.target.closest('li').querySelector('p').textContent
+    let pokemon = event.target.closest('li').querySelector('p').textContent.toLowerCase()
+    console.log(pokemon)
     window.location.href = `#/pokemon/${pokemon}`
+}
+
+async function handleGoToPage() {
+    if (page.value > 0 && page.value <= pokemonStore.pageTotal) {
+        await pokemonStore.goToPage(page.value)
+        emit('update:page', pokemonStore.page)
+    } else {
+        page.value = pokemonStore.page
+    }
+}
+
+async function handleChangePokemonNumber() {
+    await pokemonStore.changePokemonPerPage(event.target.value)
+    emit('update:page', pokemonStore.page)
 }
 </script>
 
@@ -118,7 +145,7 @@ li {
             background-color: #f0f0f0;
         }
 
-        &:hover:deep p {
+        &:hover:deep(p) {
             color: #000;
         }
     }
@@ -164,7 +191,7 @@ div#pagination {
     outline: none;
 }
 
-div#pagination div {
+div#pagination div div {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -176,14 +203,30 @@ div#pagination div {
     outline: none;
 }
 
-div#pagination input {
+div#pagination div input {
     width: 3rem;
     height: 2rem;
     text-align: center;
     margin: 0 0.5rem;
     border: none;
     border-radius: 5px;
-    background-color: #e0e0e0;
+    background-color: #e0e0e02d;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+    outline: none;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+div#pagination div select {
+    width: 3rem;
+    height: 2rem;
+    text-align: center;
+    margin: 0 0.5rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #e0e0e02d;
     font-size: 1rem;
     font-weight: bold;
     color: #000;

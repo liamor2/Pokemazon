@@ -6,6 +6,13 @@ import './style.css'
 
 import PokemonListPage from './pages/PokemonListPage.vue'
 import PokemonDetailsPage from './pages/PokemonDetailsPage.vue'
+import LoginPage from './pages/LoginPage.vue'
+import RegisterPage from './pages/RegisterPage.vue'
+import AccountPage from './pages/AccountPage.vue'
+import AboutPage from './pages/AboutPage.vue'
+import ContactPage from './pages/ContactPage.vue'
+import CartPage from './pages/CartPage.vue'
+import Page404 from './pages/404Page.vue'
 
 
 const routes = [
@@ -20,8 +27,39 @@ const routes = [
         component: PokemonDetailsPage,
     },
     {
+        path: '/login',
+        name: 'Login',
+        component: LoginPage
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: RegisterPage
+    },
+    {
+        path: '/account',
+        name: 'Account',
+        component: AccountPage
+    },
+    {
+        path: '/about',
+        name: 'About',
+        component: AboutPage
+    },
+    {
+        path: '/contact',
+        name: 'Contact',
+        component: ContactPage
+    },
+    {
+        path: '/cart',
+        name: 'Cart',
+        component: CartPage
+    },
+    {
         path: '/:catchAll(.*)',
-        redirect: '/'
+        name: 'NotFound',
+        component: Page404
     }
 ]
 

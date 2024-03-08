@@ -3,7 +3,7 @@
         <img id="pokeball" src="../assets/pokeball.png" alt="pokeball"/>
         <img id="pokemon" :src="pokemon.sprites.front_default" alt="pokemon"/>
     </div>
-    <p>{{ pokemon.name }}</p>
+    <p>{{ pokemon.name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
 </template>
 
 <script setup>

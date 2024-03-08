@@ -1,14 +1,14 @@
 <template>
     <header-component />
-    <div class="home">
-        <h1>Pokedex</h1>
+    <section>
+        <h2>Pokedex</h2>
         <input type="text" placeholder="Search" list="pokemons" />
         <button @click="handleSearch">Search</button>
         <button @click="handleReset">Reset</button>
         <datalist id="pokemons">
             <option v-for="pokemon in pokemonStore.state.pokemons" :key="pokemon.name" :value="pokemon.name" />
         </datalist>
-    </div>
+    </section>
     <list-component :pokemons="pokemonPage" @update:page="handlePageChange" />
     <footer-component />
 </template>
@@ -28,7 +28,7 @@ const page = ref(1)
 const pokemonPage = ref([])
 
 onMounted(async () => {
-    await pokemonStore.fetchPokemons()
+    await pokemonStore.fetchAllPokemons()
     await pokemonStore.createPokemonPage()
     pokemonPage.value = pokemonStore.pokemonPage
 })
@@ -58,5 +58,35 @@ async function handleReset() {
 </script>
 
 <style lang="scss" scoped>
-
-</style>../script/pokemon-store.js
+section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    h2 {
+        width: 100%;
+        margin: 0;
+        text-align: center;
+    }
+    input {
+        width: 50%;
+        padding: 0.5rem;
+        border-radius: 5px;
+        border: 1px solid #333;
+    }
+    button {
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        border: 1px solid #333;
+        background-color: #f2f2f2;
+        cursor: pointer;
+        transition: 0.3s;
+        &:hover {
+            background-color: #333;
+            color: #f2f2f2;
+        }
+    }
+}
+</style>
