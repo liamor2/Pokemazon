@@ -1,3 +1,4 @@
-npm run serve
-node server.cjs
+#!/usr/bin/env bash
+npm run serve | tr -d '\r'
+node server.cjs | tr -d '\r'
 docker-compose up

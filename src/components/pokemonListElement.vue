@@ -5,7 +5,7 @@
     </div>
     <p>{{ pokemon.name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}</p>
 </template>
-
+5
 <script setup>
 import gsap from 'gsap';
 import { onMounted } from 'vue'

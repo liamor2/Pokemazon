@@ -66,6 +66,7 @@ app.post('/login', (req, res) => {
             if (error) {
                 return res.status(400).json({ message: 'Error while logging in' });
             }
+            console.log(result);
             if (result.length > 0) {
                 const user = result[0];
                 const isPasswordCorrect = await bcrypt.compare(password, user.password);

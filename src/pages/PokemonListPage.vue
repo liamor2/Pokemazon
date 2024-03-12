@@ -1,5 +1,10 @@
 <template>
     <header-component />
+    <aside>
+        <p>
+            Welcome to Pokemazon, the best place to buy and sell pokemons. We have a wide variety of pokemons, from the most common to the most legendary. We also have a daily pokemon, which is a pokemon that changes every day. You can find it in the header. Enjoy your stay!
+        </p>
+    </aside>
     <section>
         <h2>Pokedex</h2>
         <input type="text" placeholder="Search" list="pokemons" />
@@ -58,6 +63,17 @@ async function handleReset() {
 </script>
 
 <style lang="scss" scoped>
+aside {
+    width: 50%;
+    margin: 15px auto;
+    padding: 1rem;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    p {
+        width: 100%;
+        margin: 0;
+    }
+}
 section {
     display: flex;
     flex-wrap: wrap;

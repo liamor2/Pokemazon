@@ -24,15 +24,14 @@ export const useServerGestion = defineStore('serverGestion', () => {
         state.user = JSON.parse(localStorage.getItem('user')) || state.user;
     });
     
-    const loginUser = async (password) => {
+    const loginUser = async (username, password) => {
         state.loading = true;
-        const userId = state.user.id;
         const request = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId, password }),
+            body: JSON.stringify({ username, password }),
         };
         try {
             const response = await fetch('http://localhost:3000/login', request);
